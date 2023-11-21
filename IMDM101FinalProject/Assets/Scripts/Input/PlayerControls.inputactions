@@ -1,5 +1,5 @@
 {
-    "name": "PlayerInput",
+    "name": "PlayerControls",
     "maps": [
         {
             "name": "Default",
@@ -28,6 +28,15 @@
                     "type": "Button",
                     "id": "dbafa78b-d014-4d7a-bc2f-1f97bde5cb8d",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Look",
+                    "type": "PassThrough",
+                    "id": "61657e83-88f8-4c9e-80cf-85fd600786d3",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -108,6 +117,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "38ea7739-efda-4d4f-be9a-2347388666f7",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
