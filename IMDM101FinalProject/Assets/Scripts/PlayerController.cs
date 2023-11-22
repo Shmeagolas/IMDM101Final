@@ -10,9 +10,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
-	[SerializeField] private float speed, turnSpeed;
 	[SerializeField] private Vector2 minMaxRotationX;
     [SerializeField] private Transform camTransform;
+	[SerializeField] private NetworkMoveComponent playerMovement;
 
     private CharacterController characterController;
     private PlayerControls playerControls;
@@ -22,7 +22,7 @@ public class PlayerController : NetworkBehaviour
 
 	public override void OnNetworkSpawn()
 	{
-		base.OnNetworkSpawn();
+		//base.OnNetworkSpawn();
 
         CinemachineVirtualCamera cvm = camTransform.gameObject.GetComponent<CinemachineVirtualCamera>();
 
@@ -50,30 +50,21 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
-		float _dt = Time.deltaTime;
-		if (IsLocalPlayer)
+
+		Vector2 lookInput = playerControls.Default.Look.ReadValue<Vector2>();
+		Vector2 moveInput = playerControls.Default.Movement.ReadValue<Vector2>();
+
+		if (IsClient && IsLocalPlayer)
 		{
-			if (playerControls.Default.Movement.inProgress)
-			{
-				Vector2 movementInput = playerControls.Default.Movement.ReadValue<Vector2>();
-				Vector3 move = movementInput.x * camTransform.right + movementInput.y * camTransform.forward;
-
-				move.y = 0;
-
-				characterController.Move(move * speed * _dt);
-			}
-
-			if (playerControls.Default.Look.inProgress)
-			{
-				Vector2 lookInput = playerControls.Default.Look.ReadValue<Vector2>();
-				transform.RotateAround(transform.position, transform.up, lookInput.x * turnSpeed * _dt);
-				RotateCamera(lookInput.y);
-			}
-
+			playerMovement.ProcessLocalPlayerMovement(moveInput, lookInput);
+		}
+		else
+		{
+			playerMovement.ProcessSimulatedPlayerMovement();
 		}
     }
 
-	private void RotateCamera(float lookInputY)
+	/*private void RotateY(float lookInputY)
 	{
 		float _dt = Time.deltaTime;
 
@@ -81,9 +72,10 @@ public class PlayerController : NetworkBehaviour
 		float cameraRotationAmount = lookInputY * turnSpeed * _dt;
 		float newCameraAngle = cameraAngle - cameraRotationAmount;
 
-		if(newCameraAngle <= minMaxRotationX.x && newCameraAngle >= minMaxRotationX.y)
+		if(newCameraAngle < minMaxRotationX.x && newCameraAngle > minMaxRotationX.y)
 		{
-			camTransform.RotateAround(camTransform.position, camTransform.right, -1f * turnSpeed * _dt);
+			camTransform.RotateAround(camTransform.position, camTransform.right, lookInputY * -1f * turnSpeed * _dt);
 		}
-	}
+	}*/
+
 }

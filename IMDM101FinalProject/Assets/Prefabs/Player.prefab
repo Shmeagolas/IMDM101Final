@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: 613046168813348910}
   - component: {fileID: 6580994331901040028}
   - component: {fileID: 9001170871740806787}
+  - component: {fileID: 2041826395548642428}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -478,10 +479,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90e91f964bf6488479a9403c5430c551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  turnSpeed: 10
-  minMaxRotationX: {x: 90, y: -90}
+  minMaxRotationX: {x: 80, y: -80}
   camTransform: {fileID: 1370396565412743168}
+  playerMovement: {fileID: 2041826395548642428}
+--- !u!114 &2041826395548642428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4557808243528485313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c73a9e95b14b7041af2210753a6eb08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterController: {fileID: 6580994331901040028}
+  speed: 6
+  turnSpeed: 8
+  camTransform: {fileID: 8375003953659838951}
+  virtualCam: {fileID: 1996399817919756744}
 --- !u!1 &7311497911169104826
 GameObject:
   m_ObjectHideFlags: 0
