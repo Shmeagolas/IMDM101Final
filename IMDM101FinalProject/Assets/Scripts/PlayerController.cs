@@ -83,7 +83,7 @@ public class PlayerController : NetworkBehaviour
 
 		if(newCameraAngle <= minMaxRotationX.x && newCameraAngle >= minMaxRotationX.y)
 		{
-			camTransform.RotateAround(camTransform.position, camTransform.right, -1f * turnSpeed * _dt);
+			camTransform.RotateAround(camTransform.position, camTransform.right, lookInputY * - 1f * turnSpeed * _dt);
 		}
 	}
 }
