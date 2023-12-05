@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Items 
+public class Items : MonoBehaviour
 {
 	[SerializeField] private float
 		knifeDamage,
@@ -11,6 +11,7 @@ public class Items
 		akSpeed,
 		deagDamage,
 		deagSpeed;
+	[SerializeField] private MeshFilter knifeMesh, akMesh, deagMesh;
 
 	 public enum Item {
 		KNIFE,
@@ -21,10 +22,12 @@ public class Items
 	private Item item;
 	private Holdable current;
 	private Gun backup;
-	
+	private Knife knife;
+
 	public Items(){
 		item = Item.KNIFE;
-		current = new Knife(knifeSpeed, knifeDamage, 1f);
+		knife = new Knife(knifeSpeed, knifeDamage, 1f, knifeMesh);
+		current = knife;
 	}
 
 	public Item Held {
@@ -38,12 +41,12 @@ public class Items
 				if(current is Gun) {
 					backup = (Gun)current;
 				}
-				current = new Knife(knifeSpeed, knifeDamage, 1f);
+				current = knife;
 			}else if(item == Item.AK) {
 				if(backup.getItemType() == Item.AK) {
 					current = backup;
 				} else {
-					current = new Gun(Item.AK, akSpeed, akDamage, 1000f, .2f, 25f);
+					current = new Gun(Item.AK, akSpeed, akDamage, 1000f, .2f, 25f, akMesh);
 				}
 				backup = null;
 
@@ -51,19 +54,19 @@ public class Items
 				if (backup.getItemType() == Item.DEAGLE) {
 					current = backup;
 				} else {
-					current = new Gun(Item.DEAGLE, deagSpeed, deagDamage, 1000f, .5f, 6f);
+					current = new Gun(Item.DEAGLE, deagSpeed, deagDamage, 1000f, .5f, 6f, deagMesh);
 				}
 				backup = null;
 			}
 		}
 	}
 
-	public void use() {
-		current.use();
+	public void Use() {
+		current.Use();
 	}
 
-
-
-
+	public MeshFilter GetMesh() {
+		return current.GetMesh();
+	}
 
 }

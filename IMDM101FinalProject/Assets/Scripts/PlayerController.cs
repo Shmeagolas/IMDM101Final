@@ -13,6 +13,7 @@ public class PlayerController : NetworkBehaviour
 	[SerializeField] private float speed, turnSpeed;
 	[SerializeField] private Vector2 minMaxRotationX;
     [SerializeField] private Transform camTransform;
+	private MeshFilter mesh;
 
     private CharacterController characterController;
     private PlayerControls playerControls;
@@ -43,6 +44,7 @@ public class PlayerController : NetworkBehaviour
     {
         characterController = GetComponent<CharacterController>();
         playerControls = new PlayerControls();
+		mesh = GetComponent<MeshFilter>();
         playerControls.Enable();
 		myItem = new Items();
 
@@ -73,7 +75,8 @@ public class PlayerController : NetworkBehaviour
 			}
 
 			if (playerControls.Default.LeftClick.inProgress) {
-				myItem.use();
+				myItem.Use();
+				mesh = myItem.GetMesh();
 			}
 		}
     }

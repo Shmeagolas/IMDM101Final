@@ -3,18 +3,20 @@ using UnityEngine;
 
 public class Knife : Holdable
 {
-	private float swingSpeed, moveSpeed, damage;
+	private float swingSpeed;
 	private bool canSwing;
 	private int timeSwung;
 
-	public Knife(float speed, float damage, float swingSpeed) {
-		this.moveSpeed = speed;
+	public Knife(float speed, float damage, float swingSpeed, MeshFilter mesh) {
+		this.speed = speed;
 		this.damage = damage;
 		this.swingSpeed = swingSpeed;
 		canSwing = true;
 		timeSwung = 0;
+
+		this.mesh = mesh;
 	}
-	public async void use() {
+	public override async void Use() {
 		if (canSwing) {
 			timeSwung++;
 			Debug.Log("Swing " + timeSwung);
