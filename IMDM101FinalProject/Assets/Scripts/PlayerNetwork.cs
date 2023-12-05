@@ -75,7 +75,6 @@ public class PlayerNetwork : NetworkBehaviour
         }
 
         ascend.y += GRAVITY * deltaTime;
-        Debug.Log("PC" + playerControls);
         move = new Vector3(playerControls.Default.Movement.ReadValue<Vector2>().x, 0, playerControls.Default.Movement.ReadValue<Vector2>().y);
         if (move.x > .1f)
         {

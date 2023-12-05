@@ -62,6 +62,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e914e27-569f-431d-822f-020d11ef82e5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,6 +161,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""060d375b-78ce-4bb9-8e1e-74905e705890"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -164,6 +184,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Default_Jump = m_Default.FindAction("Jump", throwIfNotFound: true);
         m_Default_Crouch = m_Default.FindAction("Crouch", throwIfNotFound: true);
         m_Default_Look = m_Default.FindAction("Look", throwIfNotFound: true);
+        m_Default_LeftClick = m_Default.FindAction("LeftClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,6 +250,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Default_Jump;
     private readonly InputAction m_Default_Crouch;
     private readonly InputAction m_Default_Look;
+    private readonly InputAction m_Default_LeftClick;
     public struct DefaultActions
     {
         private @PlayerControls m_Wrapper;
@@ -237,6 +259,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Default_Jump;
         public InputAction @Crouch => m_Wrapper.m_Default_Crouch;
         public InputAction @Look => m_Wrapper.m_Default_Look;
+        public InputAction @LeftClick => m_Wrapper.m_Default_LeftClick;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -258,6 +281,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @LeftClick.started += instance.OnLeftClick;
+            @LeftClick.performed += instance.OnLeftClick;
+            @LeftClick.canceled += instance.OnLeftClick;
         }
 
         private void UnregisterCallbacks(IDefaultActions instance)
@@ -274,6 +300,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @LeftClick.started -= instance.OnLeftClick;
+            @LeftClick.performed -= instance.OnLeftClick;
+            @LeftClick.canceled -= instance.OnLeftClick;
         }
 
         public void RemoveCallbacks(IDefaultActions instance)
@@ -297,5 +326,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnLeftClick(InputAction.CallbackContext context);
     }
 }

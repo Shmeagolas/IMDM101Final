@@ -18,6 +18,7 @@ public class PlayerController : NetworkBehaviour
     private PlayerControls playerControls;
 
     private float cameraAngle;
+	private Items myItem;
 
 
 	public override void OnNetworkSpawn()
@@ -43,6 +44,7 @@ public class PlayerController : NetworkBehaviour
         characterController = GetComponent<CharacterController>();
         playerControls = new PlayerControls();
         playerControls.Enable();
+		myItem = new Items();
 
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -70,6 +72,9 @@ public class PlayerController : NetworkBehaviour
 				RotateCamera(lookInput.y);
 			}
 
+			if (playerControls.Default.LeftClick.inProgress) {
+				myItem.use();
+			}
 		}
     }
 
