@@ -52,15 +52,16 @@ public class PlayerController : NetworkBehaviour
 		float _dt = Time.deltaTime;
 		if (IsLocalPlayer)
 		{
-			Debug.Log("locale");
+			
 			if (playerControls.Default.Movement.inProgress)
 			{
 				Vector2 movementInput = playerControls.Default.Movement.ReadValue<Vector2>();
 				Vector3 move = movementInput.x * camTransform.right + movementInput.y * camTransform.forward;
-
 				move.y = 0;
 				move.Normalize();
+				Debug.Log(characterController.transform.position);
 				characterController.Move(move * speed * _dt);
+				Debug.Log(characterController.transform.position);
 			}
 
 			if (playerControls.Default.Look.inProgress)
