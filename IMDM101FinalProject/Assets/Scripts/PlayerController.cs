@@ -35,10 +35,13 @@ public class PlayerController : NetworkBehaviour
 
 	void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        playerControls = new PlayerControls();
-        playerControls.Enable();
-		myItem = new Items();
+		if (IsLocalPlayer) {
+			characterController = GetComponent<CharacterController>();
+			playerControls = new PlayerControls();
+			playerControls.Enable();
+			myItem = new Items();
+		}
+        
 
         //Cursor.lockState = CursorLockMode.Locked;
     }
