@@ -1,7 +1,4 @@
-using Cinemachine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,10 +10,10 @@ public class PlayerController : NetworkBehaviour
 	[SerializeField] private float speed, turnSpeed;
 	[SerializeField] private Vector2 minMaxRotationX;
     [SerializeField] private Transform camTransform;
+	[SerializeField] private Camera camPrefab;
 
-    private CharacterController characterController;
+	private CharacterController characterController;
     private PlayerControls playerControls;
-	private CinemachineVirtualCamera cvm;
 	private float cameraAngle;
 	private Items myItem;
 
@@ -26,15 +23,11 @@ public class PlayerController : NetworkBehaviour
 	{
 		base.OnNetworkSpawn();
 
-        cvm = camTransform.gameObject.GetComponent<CinemachineVirtualCamera>();
+		if (IsLocalPlayer) {
+			Camera cam = Instantiate(camPrefab);
+			cam.transform.position = new Vector3(0f, 0.5f, 0f);
+			cam.transform.parent = camTransform;
 
-		if (IsOwner)
-		{
-            cvm.Priority = 1;
-		}
-		else
-		{
-            cvm.Priority = 0;
 		}
 	}
 
@@ -47,7 +40,7 @@ public class PlayerController : NetworkBehaviour
         playerControls.Enable();
 		myItem = new Items();
 
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -56,17 +49,16 @@ public class PlayerController : NetworkBehaviour
 		float _dt = Time.deltaTime;
 		if (IsLocalPlayer)
 		{
+			Debug.Log("locale");
 			if (playerControls.Default.Movement.inProgress)
 			{
 				Vector2 movementInput = playerControls.Default.Movement.ReadValue<Vector2>();
 				Vector3 move = movementInput.x * camTransform.right + movementInput.y * camTransform.forward;
 
 				move.y = 0;
-
+				move.Normalize();
 				characterController.Move(move * speed * _dt);
 			}
-
-			//camTransform.position = characterController.transform.position + new Vector3(0f, .5f, 0f);
 
 			if (playerControls.Default.Look.inProgress)
 			{
