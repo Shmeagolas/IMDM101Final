@@ -13,20 +13,20 @@ public class PlayerController : NetworkBehaviour
 	[SerializeField] private float speed, turnSpeed;
 	[SerializeField] private Vector2 minMaxRotationX;
     [SerializeField] private Transform camTransform;
-	private MeshFilter mesh;
 
     private CharacterController characterController;
     private PlayerControls playerControls;
-
-    private float cameraAngle;
+	private CinemachineVirtualCamera cvm;
+	private float cameraAngle;
 	private Items myItem;
+
 
 
 	public override void OnNetworkSpawn()
 	{
 		base.OnNetworkSpawn();
 
-        CinemachineVirtualCamera cvm = camTransform.gameObject.GetComponent<CinemachineVirtualCamera>();
+        cvm = camTransform.gameObject.GetComponent<CinemachineVirtualCamera>();
 
 		if (IsOwner)
 		{
@@ -44,7 +44,6 @@ public class PlayerController : NetworkBehaviour
     {
         characterController = GetComponent<CharacterController>();
         playerControls = new PlayerControls();
-		mesh = GetComponent<MeshFilter>();
         playerControls.Enable();
 		myItem = new Items();
 
@@ -67,6 +66,8 @@ public class PlayerController : NetworkBehaviour
 				characterController.Move(move * speed * _dt);
 			}
 
+			//camTransform.position = characterController.transform.position + new Vector3(0f, .5f, 0f);
+
 			if (playerControls.Default.Look.inProgress)
 			{
 				Vector2 lookInput = playerControls.Default.Look.ReadValue<Vector2>();
@@ -76,10 +77,12 @@ public class PlayerController : NetworkBehaviour
 
 			if (playerControls.Default.LeftClick.inProgress) {
 				myItem.Use();
-				mesh = myItem.GetMesh();
 			}
+
+			
 		}
-    }
+
+	}
 
 	private void RotateCamera(float lookInputY)
 	{

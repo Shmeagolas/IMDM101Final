@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Items : MonoBehaviour
+public class Items
 {
 	[SerializeField] private float
 		knifeDamage,
@@ -23,6 +23,7 @@ public class Items : MonoBehaviour
 	private Holdable current;
 	private Gun backup;
 	private Knife knife;
+	[SerializeField] private GameObject[] models;
 
 	public Items(){
 		item = Item.KNIFE;
@@ -65,8 +66,5 @@ public class Items : MonoBehaviour
 		current.Use();
 	}
 
-	public MeshFilter GetMesh() {
-		return current.GetMesh();
-	}
 
 }
