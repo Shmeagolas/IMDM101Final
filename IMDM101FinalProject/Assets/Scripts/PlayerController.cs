@@ -24,16 +24,6 @@ public class PlayerController : NetworkBehaviour
 	{
 		//base.OnNetworkSpawn();
 
-        CinemachineVirtualCamera cvm = camTransform.gameObject.GetComponent<CinemachineVirtualCamera>();
-
-		if (IsOwner)
-		{
-            cvm.Priority = 1;
-		}
-		else
-		{
-            cvm.Priority = 0;
-		}
 	}
 
 

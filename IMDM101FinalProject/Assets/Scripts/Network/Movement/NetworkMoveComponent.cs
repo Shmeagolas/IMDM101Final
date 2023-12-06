@@ -8,9 +8,7 @@ public class NetworkMoveComponent : NetworkBehaviour
     [SerializeField] private CharacterController characterController;
     [SerializeField] private float speed, turnSpeed;
     [SerializeField] private Transform camTransform;
-    [SerializeField] private GameObject virtualCam;
-
-    private Transform virtualCamTransform;
+    [SerializeField] private Camera camPrefab;
 
     private int tick = 0;
     private float tickRate = 1f / 128f;
@@ -31,7 +29,10 @@ public class NetworkMoveComponent : NetworkBehaviour
 	public override void OnNetworkSpawn()
 	{
         base.OnNetworkSpawn();
-        virtualCamTransform = virtualCam.transform;
+		if (IsLocalPlayer && camTransform != null && camPrefab != null) {
+            Camera cam = Instantiate(camPrefab);
+            cam.transform.parent = camTransform;
+		}
 	}
 
 	private void OnServerStateChanged(TransformState previous, TransformState current)
@@ -117,7 +118,7 @@ public class NetworkMoveComponent : NetworkBehaviour
 
     private void MovePlayer(Vector2 moveInput)
 	{
-        Vector3 move = moveInput.x * virtualCamTransform.right + moveInput.y * virtualCamTransform.forward;
+        Vector3 move = moveInput.x * camTransform.right + moveInput.y * camTransform.forward;
         move.y = 0f;
         move.Normalize();
 
@@ -132,7 +133,7 @@ public class NetworkMoveComponent : NetworkBehaviour
 
     private void RotatePlayer(Vector2 lookInput)
 	{
-        virtualCamTransform.RotateAround(virtualCamTransform.position, virtualCamTransform.right, -1f * lookInput.y * turnSpeed * tickRate);
+        camTransform.RotateAround(transform.position, camTransform.right, -1f * lookInput.y * turnSpeed * tickRate);
         transform.RotateAround(transform.position, transform.up, lookInput.x * turnSpeed * tickRate);
 	}
 
