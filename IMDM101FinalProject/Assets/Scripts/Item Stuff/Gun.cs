@@ -21,7 +21,7 @@ public class Gun : Holdable {
 	public Items.Item getItemType() {
 		return type;
 	}
-	public override void Use() {
+	public override void Use(Transform hit, float distance) {
 
 	}
 }

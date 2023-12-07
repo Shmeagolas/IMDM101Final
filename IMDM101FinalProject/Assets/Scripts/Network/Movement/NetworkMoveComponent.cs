@@ -10,6 +10,7 @@ public class NetworkMoveComponent : NetworkBehaviour
     [SerializeField] private float speed, turnSpeed;
     [SerializeField] private Transform camTransform;
     [SerializeField] private Camera camPrefab;
+    private Camera cam;
 
     private int tick = 0;
     private float tickRate = 1f / 128f;
@@ -33,7 +34,7 @@ public class NetworkMoveComponent : NetworkBehaviour
 	{
         base.OnNetworkSpawn();
 		if (IsLocalPlayer && camTransform != null && camPrefab != null) {
-            Camera cam = Instantiate(camPrefab);
+            cam = Instantiate(camPrefab);
             cam.transform.parent = camTransform;
 
             Transform equipment = transform.Find("CameraSocket").Find("Equipment");
@@ -161,7 +162,16 @@ public class NetworkMoveComponent : NetworkBehaviour
 
     private void UsePlayer(bool clickInput) {
         if (clickInput) {
-            item.Use();
+            Ray ray = cam.ViewportPointToRay(transform.Find("CameraSocket").Find("Sphere").transform.position);
+            RaycastHit hit;
+            Physics.Raycast(transform.position, camTransform.forward, out hit);
+            if(hit.transform != null) {
+                item.Use(hit.transform, Vector3.Distance(transform.position, hit.transform.position));
+			} else {
+                item.Use(null, 100);
+			}
+            
+            
         }
 	}
 

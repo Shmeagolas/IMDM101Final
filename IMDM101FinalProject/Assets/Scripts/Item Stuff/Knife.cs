@@ -2,28 +2,32 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 public class Knife : Holdable {
-	private float swingSpeed;
+	private float swingSpeed, distance;
 	private bool canSwing;
-	private int timeSwung;
+
 
 	public Knife(float speed, float damage, float swingSpeed, Renderer[] mesh, Animator anim) {
 		this.speed = speed;
 		this.damage = damage;
 		this.swingSpeed = swingSpeed;
 		canSwing = true;
-		timeSwung = 0;
-
+		distance = 3f;
 		this.anim = anim;
 		this.mesh = mesh;
 	}
-	public override async void Use() {
+	public override async void Use(Transform hit, float distance) {
 		if (canSwing) {
-			timeSwung++;
-			Debug.Log("Swing " + timeSwung);
 			anim.SetTrigger("Swing");
 			canSwing = false;
 			await Wait(swingSpeed);
 			canSwing = true;
+
+			if(this.distance >= distance) {
+				if(hit.gameObject.GetComponent<SlimeBehaviour>()) {
+					hit.gameObject.GetComponent<SlimeBehaviour>().Damage(50);
+				}
+			}
+
 		}
 	}
 

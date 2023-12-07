@@ -8,7 +8,7 @@ public class Holdable {
 	internal Items.Item name;
 	internal Renderer[] mesh;
 	internal Animator anim;
-	public virtual void Use() { }
+	public virtual void Use(Transform hit, float distance) { }
 
 
 }

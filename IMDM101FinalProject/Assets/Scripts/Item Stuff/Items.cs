@@ -89,8 +89,8 @@ public class Items {
 		}
 	}
 
-	public void Use() {
-		current.Use();
+	public void Use(Transform hit, float distance) {
+		current.Use(hit, distance);
 	}
 
 
