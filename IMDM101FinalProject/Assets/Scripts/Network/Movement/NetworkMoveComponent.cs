@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ public class NetworkMoveComponent : NetworkBehaviour
     public NetworkVariable<TransformState> serverTransformState = new NetworkVariable<TransformState>();
     public TransformState previousTransformState;
 
+    private Items item;
+
 	private void onEnable()
 	{
         serverTransformState.OnValueChanged += OnServerStateChanged;
@@ -32,6 +35,24 @@ public class NetworkMoveComponent : NetworkBehaviour
 		if (IsLocalPlayer && camTransform != null && camPrefab != null) {
             Camera cam = Instantiate(camPrefab);
             cam.transform.parent = camTransform;
+
+            Transform equipment = transform.Find("CameraSocket").Find("Equipment");
+            List<Renderer[]> weaponList = new List<Renderer[]>();
+            List<Animator> animList = new List<Animator>();
+			foreach (Transform weapon in equipment.transform) {
+                animList.Add(weapon.gameObject.GetComponent<Animator>());
+                Renderer[] parts = new Renderer[weapon.childCount];
+                int i = 0;
+                foreach(Transform part in weapon.transform) {
+                    parts[i] = part.GetComponent<Renderer>();
+                    i++;
+				}
+                weaponList.Add(parts);
+
+			}
+
+
+            item = new Items(weaponList, animList);
 		}
 	}
 
@@ -40,7 +61,7 @@ public class NetworkMoveComponent : NetworkBehaviour
         previousTransformState = previous;
 	}
 
-    public void ProcessLocalPlayerMovement(Vector2 moveInput, Vector2 lookInput)
+    public void ProcessLocalPlayerMovement(Vector2 moveInput, Vector2 lookInput, bool clicking)
 	{
         tickDeltaTime += Time.deltaTime;
         if(tickDeltaTime > tickRate)
@@ -51,12 +72,13 @@ public class NetworkMoveComponent : NetworkBehaviour
                 MovePlayerServerRPC(tick, moveInput, lookInput);
                 MovePlayer(moveInput);
                 RotatePlayer(lookInput);
+                UsePlayer(clicking);
 			}
 			else
 			{
                 MovePlayer(moveInput);
                 RotatePlayer(lookInput);
-
+                UsePlayer(clicking);
                 TransformState state = new TransformState()
                 {
                     Tick = tick,
@@ -136,6 +158,14 @@ public class NetworkMoveComponent : NetworkBehaviour
         camTransform.RotateAround(transform.position, camTransform.right, -1f * lookInput.y * turnSpeed * tickRate);
         transform.RotateAround(transform.position, transform.up, lookInput.x * turnSpeed * tickRate);
 	}
+
+    private void UsePlayer(bool clickInput) {
+        if (clickInput) {
+            item.Use();
+        }
+	}
+
+
 
     [ServerRpc]
 	private void MovePlayerServerRPC(int tick, Vector2 moveInput, Vector2 lookInput)

@@ -43,10 +43,12 @@ public class PlayerController : NetworkBehaviour
 
 		Vector2 lookInput = playerControls.Default.Look.ReadValue<Vector2>();
 		Vector2 moveInput = playerControls.Default.Movement.ReadValue<Vector2>();
+		bool clickInput = playerControls.Default.LeftClick.inProgress;
+		bool reloadInput = playerControls.Default.Reload.inProgress;
 
 		if (IsClient && IsLocalPlayer)
 		{
-			playerMovement.ProcessLocalPlayerMovement(moveInput, lookInput);
+			playerMovement.ProcessLocalPlayerMovement(moveInput, lookInput, clickInput);
 		}
 		else
 		{
