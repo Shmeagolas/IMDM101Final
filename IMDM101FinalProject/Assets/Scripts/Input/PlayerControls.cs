@@ -80,6 +80,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponBind"",
+                    ""type"": ""Button"",
+                    ""id"": ""55864f41-3369-4327-95fb-cbf2ad7cd74d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -192,6 +201,39 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f7dec2b7-30e6-49be-bc8f-ad85ff618f78"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponBind"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d9f767b8-f987-4bc5-8b32-a026753c4a8b"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=2)"",
+                    ""groups"": """",
+                    ""action"": ""WeaponBind"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""886427e2-9e47-4c69-bd7b-11e770c49acb"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": ""Scale(factor=3)"",
+                    ""groups"": """",
+                    ""action"": ""WeaponBind"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -206,6 +248,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Default_Look = m_Default.FindAction("Look", throwIfNotFound: true);
         m_Default_LeftClick = m_Default.FindAction("LeftClick", throwIfNotFound: true);
         m_Default_Reload = m_Default.FindAction("Reload", throwIfNotFound: true);
+        m_Default_WeaponBind = m_Default.FindAction("WeaponBind", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -273,6 +316,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Default_Look;
     private readonly InputAction m_Default_LeftClick;
     private readonly InputAction m_Default_Reload;
+    private readonly InputAction m_Default_WeaponBind;
     public struct DefaultActions
     {
         private @PlayerControls m_Wrapper;
@@ -283,6 +327,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Default_Look;
         public InputAction @LeftClick => m_Wrapper.m_Default_LeftClick;
         public InputAction @Reload => m_Wrapper.m_Default_Reload;
+        public InputAction @WeaponBind => m_Wrapper.m_Default_WeaponBind;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -310,6 +355,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @WeaponBind.started += instance.OnWeaponBind;
+            @WeaponBind.performed += instance.OnWeaponBind;
+            @WeaponBind.canceled += instance.OnWeaponBind;
         }
 
         private void UnregisterCallbacks(IDefaultActions instance)
@@ -332,6 +380,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @WeaponBind.started -= instance.OnWeaponBind;
+            @WeaponBind.performed -= instance.OnWeaponBind;
+            @WeaponBind.canceled -= instance.OnWeaponBind;
         }
 
         public void RemoveCallbacks(IDefaultActions instance)
@@ -357,5 +408,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnLeftClick(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnWeaponBind(InputAction.CallbackContext context);
     }
 }

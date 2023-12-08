@@ -35,6 +35,7 @@ public class NetworkMoveComponent : NetworkBehaviour
         base.OnNetworkSpawn();
 		if (IsLocalPlayer && camTransform != null && camPrefab != null) {
             cam = Instantiate(camPrefab);
+            cam.transform.position = new Vector3(0f, .5f, 0f);
             cam.transform.parent = camTransform;
 
             Transform equipment = transform.Find("CameraSocket").Find("Equipment");
@@ -62,7 +63,7 @@ public class NetworkMoveComponent : NetworkBehaviour
         previousTransformState = previous;
 	}
 
-    public void ProcessLocalPlayerMovement(Vector2 moveInput, Vector2 lookInput, bool clicking)
+    public void ProcessLocalPlayerMovement(Vector2 moveInput, Vector2 lookInput, bool clicking, float weapon)
 	{
         tickDeltaTime += Time.deltaTime;
         if(tickDeltaTime > tickRate)
@@ -74,13 +75,15 @@ public class NetworkMoveComponent : NetworkBehaviour
                 MovePlayer(moveInput);
                 RotatePlayer(lookInput);
                 UsePlayer(clicking);
+                SwitchWeapon(weapon);
 			}
 			else
 			{
                 MovePlayer(moveInput);
                 RotatePlayer(lookInput);
-                UsePlayer(clicking);
-                TransformState state = new TransformState()
+				UsePlayer(clicking);
+                SwitchWeapon(weapon);
+				TransformState state = new TransformState()
                 {
                     Tick = tick,
                     position = transform.position,
@@ -162,17 +165,31 @@ public class NetworkMoveComponent : NetworkBehaviour
 
     private void UsePlayer(bool clickInput) {
         if (clickInput) {
-            Ray ray = cam.ViewportPointToRay(transform.Find("CameraSocket").Find("Sphere").transform.position);
+
+            Ray ray = new Ray(cam.transform.position, cam.transform.forward);
             RaycastHit hit;
-            Physics.Raycast(transform.position, camTransform.forward, out hit);
+            Physics.Raycast(ray, out hit, 10000f);
             if(hit.transform != null) {
                 item.Use(hit.transform, Vector3.Distance(transform.position, hit.transform.position));
 			} else {
                 item.Use(null, 100);
 			}
+            //Debug.Log(hit.transform.name);
             
             
         }
+	}
+
+    private void SwitchWeapon(float input) {
+        if(input == 0f) {
+            return;
+		}else if(input == 1) {
+            item.setItem(Items.Item.KNIFE);
+		}else if(input == 2) {
+            item.setItem(Items.Item.DEAGLE);
+		}else if(input == 3) {
+            item.setItem(Items.Item.AK);
+		}
 	}
 
 

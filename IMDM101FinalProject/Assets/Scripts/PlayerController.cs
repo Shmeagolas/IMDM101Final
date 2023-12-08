@@ -34,7 +34,7 @@ public class PlayerController : NetworkBehaviour
         playerControls = new PlayerControls();
         playerControls.Enable();
 
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -45,10 +45,12 @@ public class PlayerController : NetworkBehaviour
 		Vector2 moveInput = playerControls.Default.Movement.ReadValue<Vector2>();
 		bool clickInput = playerControls.Default.LeftClick.inProgress;
 		bool reloadInput = playerControls.Default.Reload.inProgress;
+		float weaponSelect = playerControls.Default.WeaponBind.ReadValue<float>();
+
 
 		if (IsClient && IsLocalPlayer)
 		{
-			playerMovement.ProcessLocalPlayerMovement(moveInput, lookInput, clickInput);
+			playerMovement.ProcessLocalPlayerMovement(moveInput, lookInput, clickInput, weaponSelect);
 		}
 		else
 		{

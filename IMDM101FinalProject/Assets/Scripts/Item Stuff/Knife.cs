@@ -15,7 +15,7 @@ public class Knife : Holdable {
 		this.anim = anim;
 		this.mesh = mesh;
 	}
-	public override async void Use(Transform hit, float distance) {
+	public override async void UseAsync(Transform hit, float distance) {
 		if (canSwing) {
 			anim.SetTrigger("Swing");
 			canSwing = false;
@@ -32,7 +32,7 @@ public class Knife : Holdable {
 	}
 
 	private async Task Wait(float seconds) {
-		await Task.Delay(Mathf.FloorToInt(seconds * 1000));
+		await Task.Delay(Mathf.FloorToInt(seconds * 1000f));
 	}
 
 

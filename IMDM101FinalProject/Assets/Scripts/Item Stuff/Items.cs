@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Items {
-	[SerializeField]
-	private float
-		knifeDamage,
-		knifeSpeed,
-		akDamage,
-		akSpeed,
-		deagDamage,
-		deagSpeed;
+
 
 	public enum Item {
 		KNIFE,
@@ -20,7 +13,8 @@ public class Items {
 
 	private Item item;
 	private Holdable current;
-	private Gun backup;
+	private Gun deag;
+	private Gun aK;
 	private Knife knife;
 	private List<Renderer[]> models;
 	private List<Animator> animators;
@@ -29,14 +23,21 @@ public class Items {
 		this.models = models;
 		this.animators = animators;
 
-		knife = new Knife(knifeSpeed, knifeDamage, 1f, models[0], animators[0]);
 
+		knife = new Knife(1f, 100f, 1f, models[0], animators[0]);
+		deag = new Gun(Item.DEAGLE, .5f, 100f, 1000f, .5f, 6f, models[1], animators[1]);
+		aK = new Gun(Item.AK, .2f, 30f, 1000f, .2f, 25f, models[2], animators[2]);
 		Held = Item.KNIFE;
+		foreach(Renderer[] item in models) {
+			foreach(Renderer part in item) {
+				part.enabled = false;
+			}
+		}
 	}
 
 
 
-	public Item Held {
+	private Item Held {
 		get {
 			return item;
 		}
@@ -44,9 +45,6 @@ public class Items {
 			item = value;
 
 			if (item == Item.KNIFE) {
-				if (current is Gun) {
-					backup = (Gun)current;
-				}
 				
 				if (current != null) {
 					foreach(Renderer rend in current.mesh) {
@@ -59,29 +57,26 @@ public class Items {
 				}
 				current.mesh[3].enabled = false;
 			} else if (item == Item.AK) {
-				foreach(Renderer rend in current.mesh) {
-					rend.enabled = false;
+				if (current != null) {
+					foreach (Renderer rend in current.mesh) {
+						rend.enabled = false;
+					}
 				}
-				if (backup.getItemType() == Item.AK) {
-					current = backup;
-				} else {
-					current = new Gun(Item.AK, akSpeed, akDamage, 1000f, .2f, 25f, models[1], animators[1]);
+				current = aK;
+				foreach (Renderer rend in current.mesh) {
+					rend.enabled = true;
 				}
-				backup = null;
 				foreach (Renderer rend in current.mesh) {
 					rend.enabled = true;
 				}
 
 			} else if (item == Item.DEAGLE) {
-				foreach (Renderer rend in current.mesh) {
-					rend.enabled = false;
+				if (current != null) {
+					foreach (Renderer rend in current.mesh) {
+						rend.enabled = false;
+					}
 				}
-				if (backup.getItemType() == Item.DEAGLE) {
-					current = backup;
-				} else {
-					current = new Gun(Item.DEAGLE, deagSpeed, deagDamage, 1000f, .5f, 6f, models[2], animators[1]);
-				}
-				backup = null;
+				current = deag;
 				foreach (Renderer rend in current.mesh) {
 					rend.enabled = true;
 				}
@@ -90,9 +85,13 @@ public class Items {
 	}
 
 	public void Use(Transform hit, float distance) {
-		current.Use(hit, distance);
+		current.UseAsync(hit, distance);
 	}
 
+
+	public void setItem(Items.Item item) {
+		Held = item;
+	}
 
 }
 

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class SlimeBehaviour : MonoBehaviour
 {
-    [SerializeField] private float speed, distance, jump;
+    [SerializeField] private float speed, jump;
     private CharacterController characterController;
     private GameObject target;
-    private float checkTimer = 0f, verticalVelocity, health = 100f;
+    private float checkTimer = 0f, verticalVelocity, health = 100f, distance = 1.5f;
     private bool isGrounded;
 
     void Start()

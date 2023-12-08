@@ -19,7 +19,7 @@ public class SlimeSpawner : MonoBehaviour
     {
         spawnTimer += Time.deltaTime;
         if(spawnTimer > 10f / spawnRate) {
-            Instantiate(slimePrefab);
+            Instantiate(slimePrefab, new Vector3(Random.Range(-15f,15f),0f,Random.Range(-15f,15f)), Quaternion.identity);
             spawnTimer = 0f;
 		}
     }
